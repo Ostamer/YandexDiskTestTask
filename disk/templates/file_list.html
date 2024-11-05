@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Файлы на Яндекс.Диске</title>
+    <script>
+        function filterFiles() {
+            const selectedExtension = document.getElementById('file-extension-select').value;
+            const files = document.querySelectorAll('.file-item');
+
+            files.forEach(file => {
+                const fileExtension = file.getAttribute('data-extension');
+                if (selectedExtension === 'all' || fileExtension === selectedExtension) {
+                    file.style.display = ''; // Показываем файл
+                } else {
+                    file.style.display = 'none'; // Скрываем файл
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Файлы на Яндекс.Диске</h1>
+
+    <h3>Фильтр по типу файла:</h3>
+    <select id="file-extension-select" onchange="filterFiles()">
+        <option value="all">Все расширения</option>
+        {% for ext in extensions %}
+            <option value="{{ ext }}">{{ ext }}</option>
+        {% endfor %}
+    </select>
+
+    <ul>
+        {% for file in files %}
+            <li class="file-item" data-extension="{{ file.extension }}">
+                {{ file.name }}
+                <a href="{% url 'download_file' %}?public_key={{ public_key }}&file_path={{ file.path }}&filename={{ file.name }}">
+                    Скачать
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
